@@ -118,7 +118,7 @@ public abstract class Hologram {
      * @param player The player to show the hologram to
      */
     public final void showHologram(Player player) {
-        if(!this.data.getViewRequirement().isBlank() && !player.hasPermission(this.data.getViewRequirement())) return;
+        if(!this.data.hasPermission(player)) return;
 
         viewers.add(player.getUniqueId());
     }
@@ -129,7 +129,7 @@ public abstract class Hologram {
      * @param player The player to show the hologram to
      */
     public final void forceShowHologram(Player player) {
-        if(!this.data.getViewRequirement().isBlank() && !player.hasPermission(this.data.getViewRequirement())) return;
+        if(!this.data.hasPermission(player)) return;
 
         show(player);
 
@@ -216,7 +216,7 @@ public abstract class Hologram {
         final var players = getViewers()
                 .stream()
                 .map(Bukkit::getPlayer)
-                .filter(player -> player != null && player.getWorld().equals(world) && (!this.data.getViewRequirement().isBlank() && player.hasPermission(this.data.getViewRequirement())))
+                .filter(player -> player != null && player.getWorld().equals(world) && this.data.hasPermission(player))
                 .toList();
 
         refreshHologram(players);
@@ -228,7 +228,7 @@ public abstract class Hologram {
      * @param player the player to refresh for
      */
     public final void refreshHologram(@NotNull final Player player) {
-        if(!this.data.getViewRequirement().isBlank() && !player.hasPermission(this.data.getViewRequirement())) {
+        if(!this.data.hasPermission(player)) {
             this.hideHologram(player);
             return;
         }
@@ -277,7 +277,7 @@ public abstract class Hologram {
     }
 
     public boolean meetsVisibilityConditions(@NotNull final Player player) {
-        return this.getData().getVisibility().canSee(player, this) && (!this.data.getViewRequirement().isBlank() && player.hasPermission(this.data.getViewRequirement()));
+        return this.getData().getVisibility().canSee(player, this) && this.data.hasPermission(player);
     }
 
     public boolean isWithinVisibilityDistance(@NotNull final Player player) {

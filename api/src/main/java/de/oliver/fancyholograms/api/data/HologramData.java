@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -137,8 +138,10 @@ public class HologramData implements YamlData {
         return this;
     }
 
-    public String getViewRequirement() {
-        return viewRequirement;
+    public boolean hasPermission(Player player) {
+        if(this.viewRequirement.isBlank()) return true;
+
+        return player.hasPermission(this.viewRequirement);
     }
 
     @Override
