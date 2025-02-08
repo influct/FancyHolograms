@@ -56,6 +56,7 @@ public abstract class Hologram {
     /**
      * Returns the entity id of this hologram
      * This id is for packet use only as the entity is not registered to the server
+     *
      * @return entity id
      */
     public abstract int getEntityId();
@@ -118,7 +119,7 @@ public abstract class Hologram {
      * @param player The player to show the hologram to
      */
     public final void showHologram(Player player) {
-        if(!this.data.hasPermission(player)) return;
+        if (!this.data.hasPermission(player)) return;
 
         viewers.add(player.getUniqueId());
     }
@@ -129,7 +130,7 @@ public abstract class Hologram {
      * @param player The player to show the hologram to
      */
     public final void forceShowHologram(Player player) {
-        if(!this.data.hasPermission(player)) return;
+        if (!this.data.hasPermission(player)) return;
 
         show(player);
 
@@ -228,7 +229,7 @@ public abstract class Hologram {
      * @param player the player to refresh for
      */
     public final void refreshHologram(@NotNull final Player player) {
-        if(!this.data.hasPermission(player)) {
+        if (!this.data.hasPermission(player)) {
             this.hideHologram(player);
             return;
         }

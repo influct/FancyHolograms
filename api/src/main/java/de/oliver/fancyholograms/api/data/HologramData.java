@@ -139,7 +139,7 @@ public class HologramData implements YamlData {
     }
 
     public boolean hasPermission(Player player) {
-        if(this.viewRequirement.isBlank()) return true;
+        if (this.viewRequirement.isBlank()) return true;
 
         return player.hasPermission(this.viewRequirement);
     }
