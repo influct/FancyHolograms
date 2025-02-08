@@ -56,6 +56,7 @@ public abstract class Hologram {
     /**
      * Returns the entity id of this hologram
      * This id is for packet use only as the entity is not registered to the server
+     *
      * @return entity id
      */
     public abstract int getEntityId();
@@ -118,6 +119,8 @@ public abstract class Hologram {
      * @param player The player to show the hologram to
      */
     public final void showHologram(Player player) {
+        if (!this.data.hasPermission(player)) return;
+
         viewers.add(player.getUniqueId());
     }
 
@@ -127,6 +130,8 @@ public abstract class Hologram {
      * @param player The player to show the hologram to
      */
     public final void forceShowHologram(Player player) {
+        if (!this.data.hasPermission(player)) return;
+
         show(player);
 
         if (this.getData().getVisibility().equals(Visibility.MANUAL)) {
@@ -212,7 +217,7 @@ public abstract class Hologram {
         final var players = getViewers()
                 .stream()
                 .map(Bukkit::getPlayer)
-                .filter(player -> player != null && player.getWorld().equals(world))
+                .filter(player -> player != null && player.getWorld().equals(world) && this.data.hasPermission(player))
                 .toList();
 
         refreshHologram(players);
@@ -224,6 +229,11 @@ public abstract class Hologram {
      * @param player the player to refresh for
      */
     public final void refreshHologram(@NotNull final Player player) {
+        if (!this.data.hasPermission(player)) {
+            this.hideHologram(player);
+            return;
+        }
+
         refresh(player);
     }
 
@@ -268,7 +278,7 @@ public abstract class Hologram {
     }
 
     public boolean meetsVisibilityConditions(@NotNull final Player player) {
-        return this.getData().getVisibility().canSee(player, this);
+        return this.getData().getVisibility().canSee(player, this) && this.data.hasPermission(player);
     }
 
     public boolean isWithinVisibilityDistance(@NotNull final Player player) {

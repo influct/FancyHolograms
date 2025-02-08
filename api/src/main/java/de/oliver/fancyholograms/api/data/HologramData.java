@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +29,7 @@ public class HologramData implements YamlData {
     private Visibility visibility = DEFAULT_VISIBILITY;
     private boolean persistent = DEFAULT_PERSISTENCE;
     private String linkedNpcName;
+    private String viewRequirement;
 
     /**
      * @param name     Name of hologram
@@ -39,6 +41,8 @@ public class HologramData implements YamlData {
         this.name = name;
         this.type = type;
         this.location = location;
+
+        this.viewRequirement = "";
     }
 
     public @NotNull String getName() {
@@ -134,6 +138,12 @@ public class HologramData implements YamlData {
         return this;
     }
 
+    public boolean hasPermission(Player player) {
+        if (this.viewRequirement.isBlank()) return true;
+
+        return player.hasPermission(this.viewRequirement);
+    }
+
     @Override
     public boolean read(ConfigurationSection section, String name) {
         String worldName = section.getString("location.world", "world");
@@ -158,6 +168,7 @@ public class HologramData implements YamlData {
                     return visibleByDefault ? Visibility.ALL : Visibility.PERMISSION_REQUIRED;
                 });
         linkedNpcName = section.getString("linkedNpc");
+        viewRequirement = section.getString("viewRequirement", "");
 
         return true;
     }
@@ -176,6 +187,7 @@ public class HologramData implements YamlData {
         section.set("visibility", visibility.name());
         section.set("persistent", persistent);
         section.set("linkedNpc", linkedNpcName);
+        section.set("viewRequirement", viewRequirement);
 
         return true;
     }
